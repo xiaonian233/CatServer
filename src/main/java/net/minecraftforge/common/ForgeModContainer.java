@@ -36,6 +36,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -105,7 +106,7 @@ public class ForgeModContainer extends DummyModContainer implements WorldAccessC
 {
     public static final String VERSION_CHECK_CAT = "version_checking";
     public static int clumpingThreshold = 64;
-    public static final boolean removeErroringEntities = true;
+    public static boolean removeErroringEntities = false;
     public static boolean removeErroringTileEntities = false;
     public static boolean fullBoundingBoxLadders = false;
     public static double zombieSummonBaseChance = 0.1;
@@ -253,7 +254,7 @@ public class ForgeModContainer extends DummyModContainer implements WorldAccessC
         prop = config.get(Configuration.CATEGORY_GENERAL, "removeErroringEntities", false);
         prop.setComment("Set this to true to remove any Entity that throws an error in its update method instead of closing the server and reporting a crash log. BE WARNED THIS COULD SCREW UP EVERYTHING USE SPARINGLY WE ARE NOT RESPONSIBLE FOR DAMAGES.");
         prop.setLanguageKey("forge.configgui.removeErroringEntities").setRequiresWorldRestart(true);
-        //removeErroringEntities = prop.getBoolean(false);
+        removeErroringEntities = prop.getBoolean(false);
         propOrder.add(prop.getName());
 
         if (removeErroringEntities)
@@ -424,9 +425,16 @@ public class ForgeModContainer extends DummyModContainer implements WorldAccessC
     public void modConstruction(FMLConstructionEvent evt)
     {
         InputStream is = ForgeModContainer.class.getResourceAsStream("/META-INF/vanilla_annotations.json");
-        if (is != null)
-            JsonAnnotationLoader.loadJson(is, null, evt.getASMHarvestedData());
-        log.debug("Loading Vanilla annotations: " + is);
+        try
+        {
+            if (is != null)
+                JsonAnnotationLoader.loadJson(is, null, evt.getASMHarvestedData());
+            log.debug("Loading Vanilla annotations: " + is);
+        }
+        finally
+        {
+            IOUtils.closeQuietly(is);
+        }
 
         List<String> all = Lists.newArrayList();
         for (ASMData asm : evt.getASMHarvestedData().getAll(ICrashReportDetail.class.getName().replace('.', '/')))
