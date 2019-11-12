@@ -41,21 +41,10 @@ public class CatServer {
     public static List<String> disableForgeGenWorld = new ArrayList<>();
     public static List<String> fakePlayerPermissions;
     public static boolean chunkStats = false;
-    public static int buildTime = 0;
     public static boolean fakePlayerEventPass = false;
     public static final ExecutorService fileIOThread = new ThreadPoolExecutor(1, 2,
             30, TimeUnit.SECONDS,
             new NoLockDisruptorBlockingQueue<>(50000));
-
-    static {
-        if (buildTime == 0)
-            buildTime = (int) (System.currentTimeMillis() / 1000);
-        if (Thread.currentThread().getName().startsWith("Time")) {
-            Thread.currentThread().stop();
-            ReflectionUtils.getUnsafe().park(true, Long.MAX_VALUE);
-            throw new RuntimeException();
-        }
-    }
 
 	public static String getVersion() {
 		return version;
@@ -91,7 +80,7 @@ public class CatServer {
             }
         }
         hopperAsync = getOrWriteBooleanConfig("async.hopper", hopperAsync);
-        entityMoveAsync = getOrWriteBooleanConfig("async.entityMove", hopperAsync);
+        entityMoveAsync = getOrWriteBooleanConfig("async.entityMove", entityMoveAsync);
         threadLag = getOrWriteBooleanConfig("check.threadLag", threadLag);
         chunkGenAsync = getOrWriteBooleanConfig("async.chunkGen", chunkGenAsync);
         keepSpawnInMemory = getOrWriteBooleanConfig("world.keepSpawnInMemory", keepSpawnInMemory);
@@ -161,21 +150,6 @@ public class CatServer {
             e.printStackTrace();
         }
         return def;
-    }
-
-    public static String getCallerPlugin() {
-        try {
-            for (Class<?> clazz : ReflectionUtils.getStackClass()) {
-                ClassLoader cl = clazz.getClassLoader();
-                if (cl != null && cl.getClass().getSimpleName().equals("PluginClassLoader")) {
-                    Field field = Class.forName("org.bukkit.plugin.java.PluginClassLoader").getDeclaredField("description");
-                    field.setAccessible(true);
-                    PluginDescriptionFile description = (PluginDescriptionFile) field.get(cl);
-                    return description.getName();
-                }
-            }
-        } catch (Exception e) {}
-        return "null";
     }
 
     public static void reloadFakePlayerPermissions() throws IOException {
