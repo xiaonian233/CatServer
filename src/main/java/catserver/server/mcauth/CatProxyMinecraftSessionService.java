@@ -10,7 +10,7 @@ public class CatProxyMinecraftSessionService extends YggdrasilMinecraftSessionSe
     }
     @Override
     protected GameProfile fillGameProfile(GameProfile profile, boolean requireSecure) {
-        if (CatServer.disableUpdateGameProfile) {
+        if (CatServer.getConfig().disableUpdateGameProfile) {
             return profile;
         }
         return super.fillGameProfile(profile, requireSecure);

@@ -113,7 +113,7 @@
 -            this.tickedGameTime = this.world.getTotalWorldTime();
 -
 -            if (!this.isOnTransferCooldown())
-+        if (CatServer.hopperAsync) {
++        if (CatServer.getConfig().hopperAsync) {
 +            this.world.addHopperQueue(this);
 +        } else {
 +            if (!this.world.isRemote)

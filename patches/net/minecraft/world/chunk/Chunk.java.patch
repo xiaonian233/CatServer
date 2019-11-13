@@ -709,7 +709,7 @@
 +            }
 +            BlockSand.fallInstantly = false;
 +            this.world.getServer().getPluginManager().callEvent(new org.bukkit.event.world.ChunkPopulateEvent(bukkitChunk));
-+            if (! CatServer.disableForgeGenWorld.contains(world.getName()))
++            if (! CatServer.getConfig().disableForgeGenWorld.contains(world.getName()))
 +                net.minecraftforge.fml.common.registry.GameRegistry.generateWorld(this.x, this.z, this.world, generator, this.world.getChunkProvider());
              this.markDirty();
          }

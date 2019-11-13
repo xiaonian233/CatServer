@@ -57,7 +57,7 @@
          if (!this.entriesWithoutChunks.isEmpty())
          {
 -            long l = System.nanoTime() + 50000000L;
-+            long l = System.nanoTime() + CatServer.worldGenMaxTickTime;
++            long l = System.nanoTime() + CatServer.getConfig().worldGenMaxTickTime;
              int k = 49;
              Iterator<PlayerChunkMapEntry> iterator = this.entriesWithoutChunks.iterator();
  

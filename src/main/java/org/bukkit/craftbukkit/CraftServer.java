@@ -311,7 +311,7 @@ public final class CraftServer implements Server {
         chunkGCPeriod = configuration.getInt("chunk-gc.period-in-ticks");
         chunkGCLoadThresh = configuration.getInt("chunk-gc.load-threshold");
         loadIcon();
-        CatServer.loadConfig(); // CatServer
+        CatServer.getConfig().loadConfig(); // CatServer
     }
 
     public boolean getPermissionOverride(ICommandSender listener) {

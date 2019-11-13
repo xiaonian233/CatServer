@@ -1,4 +1,4 @@
-package catserver.server.command;
+package catserver.server.command.internal;
 
 import catserver.server.CatServer;
 import org.bukkit.command.Command;
@@ -6,8 +6,8 @@ import org.bukkit.command.CommandSender;
 
 import java.io.IOException;
 
-public class PermissionCommand extends Command {
-    public PermissionCommand(String name) {
+public class CommandFakefile extends Command {
+    public CommandFakefile(String name) {
         super(name);
         this.description = "Reload fake player permission file";
         this.usageMessage = "/fakefile reload";
@@ -20,7 +20,7 @@ public class PermissionCommand extends Command {
         if (args.length != 1) return false;
         if (! args[0].equals("reload")) return false;
         try {
-            CatServer.reloadFakePlayerPermissions();
+            CatServer.getConfig().reloadFakePlayerPermissions();
             sender.sendMessage("SUCCESS");
             return true;
         } catch (IOException e) {
