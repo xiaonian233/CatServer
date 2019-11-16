@@ -19,7 +19,7 @@ public class CraftFakePlayer extends CraftPlayer {
 
     @Override
     public boolean hasPermission(String name) {
-        if (CatServer.fakePlayerPermissions.contains(name))
+        if (CatServer.getConfig().fakePlayerPermissions.contains(name))
             return true;
         final Player realPlayer = getRealPlayer();
         if (realPlayer == null)
@@ -29,7 +29,7 @@ public class CraftFakePlayer extends CraftPlayer {
 
     @Override
     public boolean isPermissionSet(String name) {
-        if (CatServer.fakePlayerPermissions.contains(name))
+        if (CatServer.getConfig().fakePlayerPermissions.contains(name))
             return true;
         final Player realPlayer = getRealPlayer();
         if (realPlayer == null)
@@ -39,7 +39,7 @@ public class CraftFakePlayer extends CraftPlayer {
 
     @Override
     public boolean isPermissionSet(Permission perm) {
-        if (CatServer.fakePlayerPermissions.contains(perm.getName()))
+        if (CatServer.getConfig().fakePlayerPermissions.contains(perm.getName()))
             return true;
         final Player realPlayer = getRealPlayer();
         if (realPlayer == null)
@@ -49,7 +49,7 @@ public class CraftFakePlayer extends CraftPlayer {
 
     @Override
     public boolean hasPermission(Permission perm) {
-        if (CatServer.fakePlayerPermissions.contains(perm.getName()))
+        if (CatServer.getConfig().fakePlayerPermissions.contains(perm.getName()))
             return true;
         final Player realPlayer = getRealPlayer();
         if (realPlayer == null)

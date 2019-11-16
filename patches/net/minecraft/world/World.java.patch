@@ -5,7 +5,7 @@
  
 +import catserver.server.CatServer;
 +import catserver.server.WorldCapture;
-+import catserver.server.command.ChunkStats;
++import catserver.server.command.internal.CommandChunkStats;
 +import catserver.server.utils.EntityMoveTask;
 +import catserver.server.utils.HopperTask;
 +import catserver.server.utils.ThreadSafeList;
@@ -160,7 +160,7 @@
      private final WorldBorder worldBorder;
      int[] lightUpdateBlockList;
 +    private LinkedBlockingQueue<HopperTask> hopperQueue = new LinkedBlockingQueue<>();
-+    private final ExecutorService entityThreadPool = new ThreadPoolExecutor(1, CatServer.entityPoolNum,
++    private final ExecutorService entityThreadPool = new ThreadPoolExecutor(1, CatServer.getConfig().entityPoolNum,
 +            30, TimeUnit.SECONDS,
 +            new NoLockDisruptorBlockingQueue<>(1000000));
 +    public boolean restoringBlockSnapshots = false;
@@ -885,8 +885,8 @@
          this.profiler.startSection("entities");
          this.profiler.startSection("global");
  
-+        boolean checkSkipTick = CatServer.enableSkipTick && MinecraftServer.currentTick % 50 == 0;
-+        boolean shouldSkipTick = CatServer.enableSkipTick && MinecraftServer.currentTick % 5 > 0;
++        boolean checkSkipTick = CatServer.getConfig().enableSkipTick && MinecraftServer.currentTick % 50 == 0;
++        boolean shouldSkipTick = CatServer.getConfig().enableSkipTick && MinecraftServer.currentTick % 5 > 0;
 +
 +        final int theWorldPlayerSize = playerEntities.size();
          for (int i = 0; i < this.weatherEffects.size(); ++i)
@@ -960,10 +960,10 @@
 -                    this.updateEntity(entity2);
 +                    SpigotTimings.tickEntityTimer.startTiming(); // Spigot
 +                    net.minecraftforge.server.timings.TimeTracker.ENTITY_UPDATE.trackStart(entity2);
-+                    if (CatServer.chunkStats) {
++                    if (CommandChunkStats.chunkStats) {
 +                        long start = System.nanoTime();
 +                        this.updateEntity(entity2);
-+                        ChunkStats.addTime(this.getChunkFromBlockCoords(entity2.getPosition()), System.nanoTime() - start);
++                        CommandChunkStats.addTime(this.getChunkFromBlockCoords(entity2.getPosition()), System.nanoTime() - start);
 +                    } else {
 +                        this.updateEntity(entity2);
 +                    }
@@ -1067,10 +1067,10 @@
 -                        ((ITickable)tileentity).update();
 +                        tileentity.tickTimer.startTiming(); // Spigot
 +                        net.minecraftforge.server.timings.TimeTracker.TILE_ENTITY_UPDATE.trackStart(tileentity);
-+                        if (CatServer.chunkStats) {
++                        if (CommandChunkStats.chunkStats) {
 +                            long start = System.nanoTime();
 +                            ((ITickable)tileentity).update();
-+                            ChunkStats.addTime(this.getChunkFromBlockCoords(tileentity.getPos()), System.nanoTime() - start);
++                            CommandChunkStats.addTime(this.getChunkFromBlockCoords(tileentity.getPos()), System.nanoTime() - start);
 +                        } else {
 +                            ((ITickable)tileentity).update();
 +                        }

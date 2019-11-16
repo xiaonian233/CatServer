@@ -148,7 +148,7 @@
 +        capabilities = net.minecraftforge.event.ForgeEventFactory.gatherCapabilities(this);
 +        }
 +        nmsEntity = this.getClass().getName().startsWith("net.minecraft.");
-+        if ((CatServer.modMob || nmsEntity) && (this instanceof EntityLivingBase) && !(this instanceof EntityPlayer || this instanceof IMerchant || this instanceof AbstractHorse || this instanceof IEntityOwnable)) {
++        if ((CatServer.getConfig().modMob || nmsEntity) && (this instanceof EntityLivingBase) && !(this instanceof EntityPlayer || this instanceof IMerchant || this instanceof AbstractHorse || this instanceof IEntityOwnable)) {
 +            canAsync = true;
 +        }
      }
@@ -310,7 +310,7 @@
      public void move(MoverType type, double x, double y, double z)
      {
 +        org.bukkit.craftbukkit.SpigotTimings.entityMoveTimer.startTiming(); // Spigot
-+        if (CatServer.entityMoveAsync && canAsync) {
++        if (CatServer.getConfig().entityMoveAsync && canAsync) {
 +            world.addEntityMoveQueue(new EntityMoveTask(this, type, x, y, z, System.currentTimeMillis()));
 +        } else {
 +            move0(type, x, y, z, false);

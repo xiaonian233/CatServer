@@ -72,7 +72,7 @@
 +                        }
 +                    };
 +
-+                    if (! CatServer.disableUpdateGameProfile)
++                    if (! CatServer.getConfig().disableUpdateGameProfile)
 +                        MinecraftServer.getServerInst().getGameProfileRepository().findProfilesByNames(new String[] { key }, Agent.MINECRAFT, gameProfileLookup);
 +
 +                    GameProfile profile = profiles[ 0 ];

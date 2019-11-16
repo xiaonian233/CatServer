@@ -1,6 +1,5 @@
-package catserver.server.command;
+package catserver.server.command.internal;
 
-import catserver.server.CatServer;
 import catserver.server.utils.ChunkTime;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.common.FMLLog;
@@ -12,10 +11,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ChunkStats extends Command {
+public class CommandChunkStats extends Command {
     private static Map<Chunk, Long> chunks = new HashMap<>();
+    public static boolean chunkStats = false;
 
-    public ChunkStats(String name) {
+    public CommandChunkStats(String name) {
         super(name);
         this.description = "Chunk Stats Command";
         this.usageMessage = "/chunkstats start/stop";
@@ -28,7 +28,7 @@ public class ChunkStats extends Command {
         if (args.length != 1) return false;
         if (args[0].equals("start")) {
             chunks = new HashMap<>();
-            CatServer.chunkStats = true;
+            chunkStats = true;
             sender.sendMessage("Chunk stats started.");
             return true;
         }else if (args[0].equals("stop")) {
@@ -64,7 +64,7 @@ public class ChunkStats extends Command {
     }
 
     public static void addTime(Chunk chunk, long time) {
-        if (! CatServer.chunkStats) return;
+        if (! chunkStats) return;
         Long oldTime = chunks.get(chunk);
         if (oldTime == null)
             oldTime = 0L;
