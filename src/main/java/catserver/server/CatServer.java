@@ -33,7 +33,7 @@ public class CatServer {
         return false;
     }
 
-    public static void watchdogForceExitTask() {
+    public static void runWatchdogForceExitTask() {
         MinecraftServer.getServerInst().primaryThread.suspend();
         new Timer("WatchdogForceExitTask").schedule(new TimerTask() {
             public void run() {
