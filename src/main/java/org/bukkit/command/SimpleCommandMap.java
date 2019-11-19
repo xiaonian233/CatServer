@@ -36,8 +36,8 @@ public class SimpleCommandMap implements CommandMap {
         register("bukkit", new PluginsCommand("plugins"));
         register("bukkit", new TimingsCommand("timings"));
         register("catserver", new CommandPlugin("plugin"));
-        register("fakefile", new CommandFakefile("fakefile"));
-        register("chunkstats", new CommandChunkStats("chunkstats"));
+        register("catserver", new CommandFakefile("fakefile"));
+        register("catserver", new CommandChunkStats("chunkstats"));
     }
 
     public void setFallbackCommands() {
