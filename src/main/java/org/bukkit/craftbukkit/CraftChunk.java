@@ -20,21 +20,17 @@ import org.bukkit.ChunkSnapshot;
 public class CraftChunk implements Chunk {
     private WeakReference<net.minecraft.world.chunk.Chunk> weakChunk;
     private final WorldServer worldServer;
-    private final net.minecraft.world.World nmsWorld;
     private final int x;
     private final int z;
     private static final byte[] emptyData = new byte[2048];
     private static final short[] emptyBlockIDs = new short[4096];
     private static final byte[] emptySkyLight = new byte[2048];
+    private final net.minecraft.world.World nmsWorld;
 
     public CraftChunk(net.minecraft.world.chunk.Chunk chunk) {
         this.weakChunk = new WeakReference<net.minecraft.world.chunk.Chunk>(chunk);
         nmsWorld = getHandle().getWorld();
-        if (nmsWorld instanceof WorldServer) {
-            worldServer = (WorldServer) getHandle().getWorld();
-        }else {
-            worldServer = null;
-        }
+        worldServer = nmsWorld instanceof WorldServer ? (WorldServer)nmsWorld : null;
         x = getHandle().x;
         z = getHandle().z;
     }
