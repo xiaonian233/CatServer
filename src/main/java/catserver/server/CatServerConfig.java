@@ -63,6 +63,13 @@ public class CatServerConfig {
         // general
         disableUpdateGameProfile = getOrWriteBooleanConfig("disableUpdateGameProfile", disableUpdateGameProfile);
         fakePlayerEventPass = getOrWriteBooleanConfig("fakePlayer.eventPass", fakePlayerEventPass);
+        // save config
+        try {
+            config.save(configFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // fakeplayer
         try {
             reloadFakePlayerPermissions();
         } catch (IOException e) {
@@ -75,11 +82,6 @@ public class CatServerConfig {
             return config.getBoolean(path);
         }
         config.set(path, def);
-        try {
-            config.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         return def;
     }
 
@@ -88,11 +90,6 @@ public class CatServerConfig {
             return config.getInt(path);
         }
         config.set(path, def);
-        try {
-            config.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         return def;
     }
 
@@ -101,11 +98,6 @@ public class CatServerConfig {
             return config.getStringList(path);
         }
         config.set(path, def);
-        try {
-            config.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         return def;
     }
 
@@ -114,17 +106,12 @@ public class CatServerConfig {
             return config.getLong(path);
         }
         config.set(path, def);
-        try {
-            config.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         return def;
     }
 
     public void reloadFakePlayerPermissions() throws IOException {
         File permissFile = new File("fakePlayerPermission.txt");
-        if (! permissFile.exists()) {
+        if (!permissFile.exists()) {
             permissFile.createNewFile();
             InputStreamReader inputStreamReader = new InputStreamReader(CatServer.class.getClassLoader().getResourceAsStream("configurations/fakePlayerPermission.txt"));
             List<String> lines = IOUtils.readLines(inputStreamReader);
