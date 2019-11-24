@@ -18,14 +18,15 @@ public class CatServerConfig {
     public boolean hopperAsync = false;
     public boolean entityMoveAsync = true;
     public boolean chunkGenAsync = false;
+    public boolean modMobAsync = false;
+    public int entityPoolNum = 3;
+
     public boolean keepSpawnInMemory = true;
     public boolean enableSkipTick = true;
-    public boolean disableUpdateGameProfile = true;
-    public boolean modMob = false;
-    public boolean entityAI = true;
     public long worldGenMaxTickTime = 15000000L;
-    public int entityPoolNum = 3;
     public List<String> disableForgeGenWorld = new ArrayList<>();
+
+    public boolean disableUpdateGameProfile = true;
     public static boolean fakePlayerEventPass = false;
 
     public List<String> fakePlayerPermissions = new ArrayList<>();
@@ -46,17 +47,19 @@ public class CatServerConfig {
                 e.printStackTrace();
             }
         }
+        // async
         hopperAsync = getOrWriteBooleanConfig("async.hopper", hopperAsync);
         entityMoveAsync = getOrWriteBooleanConfig("async.entityMove", entityMoveAsync);
         chunkGenAsync = getOrWriteBooleanConfig("async.chunkGen", chunkGenAsync);
+        modMobAsync = getOrWriteBooleanConfig("async.modMob", modMobAsync);
+        entityPoolNum = getOrWriteIntConfig("async.asyncPoolNum", entityPoolNum);
+        // world
         keepSpawnInMemory = getOrWriteBooleanConfig("world.keepSpawnInMemory", keepSpawnInMemory);
         enableSkipTick = getOrWriteBooleanConfig("world.enableSkipTick", enableSkipTick);
         disableForgeGenWorld = getOrWriteStringListConfig("world.worldGen.disableForgeGenWorld", disableForgeGenWorld);
+        worldGenMaxTickTime = getOrWriteStringLongConfig("world.worldGenMaxTick", 15) * 1000000;
+        // general
         disableUpdateGameProfile = getOrWriteBooleanConfig("disableUpdateGameProfile", disableUpdateGameProfile);
-        worldGenMaxTickTime = getOrWriteStringLongConfig("maxTickTime.worldGen", 15) * 1000000;
-        modMob = getOrWriteBooleanConfig("async.modMob", modMob);
-        entityAI = getOrWriteBooleanConfig("async.entityAI", entityAI);
-        entityPoolNum = getOrWriteIntConfig("async.asyncPoolNum", entityPoolNum);
         fakePlayerEventPass = getOrWriteBooleanConfig("fakePlayer.eventPass", fakePlayerEventPass);
         try {
             reloadFakePlayerPermissions();
