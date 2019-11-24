@@ -23,6 +23,7 @@ public class CatServerConfig {
 
     public boolean keepSpawnInMemory = true;
     public boolean enableSkipTick = true;
+    public boolean enableCapture = true;
     public long worldGenMaxTickTime = 15000000L;
     public List<String> disableForgeGenWorld = new ArrayList<>();
 
@@ -56,6 +57,7 @@ public class CatServerConfig {
         // world
         keepSpawnInMemory = getOrWriteBooleanConfig("world.keepSpawnInMemory", keepSpawnInMemory);
         enableSkipTick = getOrWriteBooleanConfig("world.enableSkipTick", enableSkipTick);
+        enableCapture = getOrWriteBooleanConfig("world.enableCapture", enableCapture);
         disableForgeGenWorld = getOrWriteStringListConfig("world.worldGen.disableForgeGenWorld", disableForgeGenWorld);
         worldGenMaxTickTime = getOrWriteStringLongConfig("world.worldGenMaxTick", 15) * 1000000;
         // general
