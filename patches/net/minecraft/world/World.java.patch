@@ -6,8 +6,8 @@
 +import catserver.server.CatServer;
 +import catserver.server.WorldCapture;
 +import catserver.server.command.internal.CommandChunkStats;
-+import catserver.server.utils.EntityMoveTask;
-+import catserver.server.utils.HopperTask;
++import catserver.server.threads.EntityMoveTask;
++import catserver.server.threads.HopperTask;
 +import catserver.server.utils.ThreadSafeList;
 +import com.conversantmedia.util.concurrent.NoLockDisruptorBlockingQueue;
  import com.google.common.base.Function;

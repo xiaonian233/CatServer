@@ -1,4 +1,4 @@
-package catserver.server.utils;
+package catserver.server.threads;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
@@ -27,7 +27,7 @@ public class EntityMoveTask implements Runnable {
                 return;
             if (this.entity.world.unloadedEntitySet.contains(this.entity))
                 return;
-            //Start
+            // Start
             this.entity.move0(this.moverType, this.x, this.y, this.z, true);
         } catch (Exception e) {
             e.printStackTrace();

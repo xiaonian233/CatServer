@@ -1,6 +1,13 @@
 --- ../src-base/minecraft/net/minecraft/world/chunk/storage/AnvilSaveConverter.java
 +++ ../src-work/minecraft/net/minecraft/world/chunk/storage/AnvilSaveConverter.java
-@@ -225,7 +225,12 @@
+@@ -1,5 +1,6 @@
+ package net.minecraft.world.chunk.storage;
+ 
++import catserver.server.utils.LanguageUtils;
+ import com.google.common.collect.Lists;
+ import java.io.DataInputStream;
+ import java.io.DataOutputStream;
+@@ -225,7 +226,12 @@
                          }
                          else
                          {
@@ -9,7 +16,7 @@
 +                            try {
 +                                nbttagcompound = CompressedStreamTools.read(datainputstream);
 +                            }catch (Exception e) {
-+                                throw new RuntimeException("服务端存档文件损坏 文件路径:" + regionfile.getFileName().getCanonicalPath());
++                                throw new RuntimeException(LanguageUtils.I18nToString("world.region_corrupt") + regionfile.getFileName().getCanonicalPath());
 +                            }
                              datainputstream.close();
                              NBTTagCompound nbttagcompound1 = nbttagcompound.getCompoundTag("Level");

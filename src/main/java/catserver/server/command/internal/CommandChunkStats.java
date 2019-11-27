@@ -1,6 +1,5 @@
 package catserver.server.command.internal;
 
-import catserver.server.utils.ChunkTime;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.common.FMLLog;
 import org.bukkit.command.Command;
@@ -70,5 +69,15 @@ public class CommandChunkStats extends Command {
             oldTime = 0L;
         oldTime += time;
         chunks.put(chunk, oldTime);
+    }
+
+    class ChunkTime {
+        public final Chunk chunk;
+        public final long time;
+
+        public ChunkTime(Chunk chunk, long time) {
+            this.chunk = chunk;
+            this.time = time;
+        }
     }
 }

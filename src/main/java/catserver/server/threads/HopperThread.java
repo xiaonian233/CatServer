@@ -1,10 +1,8 @@
 package catserver.server.threads;
 
-import catserver.server.utils.HopperTask;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.world.WorldServer;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class HopperThread extends Thread {
