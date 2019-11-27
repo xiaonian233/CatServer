@@ -30,6 +30,6 @@ public class LanguageUtils {
     }
 
     public static String I18nToString(String text) {
-        return current.getOrDefault(text, "null");
+        return current.getOrDefault(text, current != EN ? EN.getOrDefault(text, "null") : "null");
     }
 }
