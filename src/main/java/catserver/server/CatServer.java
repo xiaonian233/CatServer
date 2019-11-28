@@ -57,4 +57,8 @@ public class CatServer {
     public static CatServerConfig getConfig() {
 	    return config;
     }
+
+    public static void postPrimaryThread(Runnable runnable) {
+        MinecraftServer.getServerInst().addScheduledTask(runnable);
+    }
 }

@@ -18,14 +18,16 @@ public class CatServerConfig {
     public boolean hopperAsync = false;
     public boolean entityMoveAsync = true;
     public boolean chunkGenAsync = false;
+    public boolean modMobAsync = false;
+    public int entityPoolNum = 3;
+
     public boolean keepSpawnInMemory = true;
     public boolean enableSkipTick = true;
-    public boolean disableUpdateGameProfile = true;
-    public boolean modMob = false;
-    public boolean entityAI = true;
+    public boolean enableCapture = true;
     public long worldGenMaxTickTime = 15000000L;
-    public int entityPoolNum = 3;
     public List<String> disableForgeGenWorld = new ArrayList<>();
+
+    public boolean disableUpdateGameProfile = true;
     public static boolean fakePlayerEventPass = false;
 
     public List<String> fakePlayerPermissions = new ArrayList<>();
@@ -46,18 +48,28 @@ public class CatServerConfig {
                 e.printStackTrace();
             }
         }
+        // async
         hopperAsync = getOrWriteBooleanConfig("async.hopper", hopperAsync);
         entityMoveAsync = getOrWriteBooleanConfig("async.entityMove", entityMoveAsync);
         chunkGenAsync = getOrWriteBooleanConfig("async.chunkGen", chunkGenAsync);
+        modMobAsync = getOrWriteBooleanConfig("async.modMob", modMobAsync);
+        entityPoolNum = getOrWriteIntConfig("async.asyncPoolNum", entityPoolNum);
+        // world
         keepSpawnInMemory = getOrWriteBooleanConfig("world.keepSpawnInMemory", keepSpawnInMemory);
         enableSkipTick = getOrWriteBooleanConfig("world.enableSkipTick", enableSkipTick);
+        enableCapture = getOrWriteBooleanConfig("world.enableCapture", enableCapture);
         disableForgeGenWorld = getOrWriteStringListConfig("world.worldGen.disableForgeGenWorld", disableForgeGenWorld);
+        worldGenMaxTickTime = getOrWriteStringLongConfig("world.worldGenMaxTick", 15) * 1000000;
+        // general
         disableUpdateGameProfile = getOrWriteBooleanConfig("disableUpdateGameProfile", disableUpdateGameProfile);
-        worldGenMaxTickTime = getOrWriteStringLongConfig("maxTickTime.worldGen", 15) * 1000000;
-        modMob = getOrWriteBooleanConfig("async.modMob", modMob);
-        entityAI = getOrWriteBooleanConfig("async.entityAI", entityAI);
-        entityPoolNum = getOrWriteIntConfig("async.asyncPoolNum", entityPoolNum);
         fakePlayerEventPass = getOrWriteBooleanConfig("fakePlayer.eventPass", fakePlayerEventPass);
+        // save config
+        try {
+            config.save(configFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // fakeplayer
         try {
             reloadFakePlayerPermissions();
         } catch (IOException e) {
@@ -70,11 +82,6 @@ public class CatServerConfig {
             return config.getBoolean(path);
         }
         config.set(path, def);
-        try {
-            config.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         return def;
     }
 
@@ -83,11 +90,6 @@ public class CatServerConfig {
             return config.getInt(path);
         }
         config.set(path, def);
-        try {
-            config.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         return def;
     }
 
@@ -96,11 +98,6 @@ public class CatServerConfig {
             return config.getStringList(path);
         }
         config.set(path, def);
-        try {
-            config.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         return def;
     }
 
@@ -109,17 +106,12 @@ public class CatServerConfig {
             return config.getLong(path);
         }
         config.set(path, def);
-        try {
-            config.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         return def;
     }
 
     public void reloadFakePlayerPermissions() throws IOException {
         File permissFile = new File("fakePlayerPermission.txt");
-        if (! permissFile.exists()) {
+        if (!permissFile.exists()) {
             permissFile.createNewFile();
             InputStreamReader inputStreamReader = new InputStreamReader(CatServer.class.getClassLoader().getResourceAsStream("configurations/fakePlayerPermission.txt"));
             List<String> lines = IOUtils.readLines(inputStreamReader);

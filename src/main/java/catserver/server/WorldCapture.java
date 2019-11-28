@@ -31,6 +31,7 @@ public class WorldCapture {
     }
 
     public void startCapture(EntityPlayer player, ItemStack stack, EnumHand hand) {
+        if (!CatServer.getConfig().enableCapture) return;
         this.curPlayer = player;
         this.curItemStack = stack;
         this.curHand = hand;

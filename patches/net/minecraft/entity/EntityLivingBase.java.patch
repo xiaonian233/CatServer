@@ -3,7 +3,7 @@
 @@ -1,7 +1,11 @@
  package net.minecraft.entity;
  
-+import catserver.server.utils.EntityNearTask;
++import catserver.server.threads.EntityNearTask;
 +import com.google.common.base.Function;
  import com.google.common.base.Objects;
 +import com.google.common.collect.Lists;
