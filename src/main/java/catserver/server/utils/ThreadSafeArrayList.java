@@ -174,7 +174,7 @@ public class ThreadSafeArrayList<E> extends ArrayList<E> {
 
     @Override
     public boolean equals(Object o) {
-        return o == this || (o instanceof ThreadSafeArrayList && ((ThreadSafeArrayList) o).list.equals(list)) || list.equals(o);
+        return o == this || (o instanceof ThreadSafeArrayList ? ((ThreadSafeArrayList) o).list.equals(list) : list.equals(o));
     }
 
     @Override
