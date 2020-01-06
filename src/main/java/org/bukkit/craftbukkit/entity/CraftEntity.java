@@ -133,16 +133,13 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
         if (entity instanceof EntityLivingBase) {
             // Players
             if (entity instanceof EntityPlayer) {
+                // CatServer start - support fake player
                 if (entity instanceof EntityPlayerMP) {
-                    // CatServer start - support fake player
-                    if (entity instanceof FakePlayer)
-                        return new CraftFakePlayer(server, (FakePlayer) entity);
-                    return new CraftPlayer(server, (EntityPlayerMP) entity);
+                    if (entity instanceof FakePlayer) { return new CraftFakePlayer(server, (FakePlayer) entity); }
+                    else { return new CraftPlayer(server, (EntityPlayerMP) entity); }
                 }
-                else { // CatServer - support fake player classes from mods
-                    return new CraftFakePlayer(server, FakePlayerFactory.get(DimensionManager.getWorld(entity.world.provider.getDimension()), ((EntityPlayer) entity).getGameProfile()));
-                }
-                // CatServer end - support fake player
+                else { return new CraftFakePlayer(server, FakePlayerFactory.get(DimensionManager.getWorld(entity.world.provider.getDimension()), ((EntityPlayer) entity).getGameProfile())); }
+                // CatServer end
             }
             // Water Animals
             else if (entity instanceof EntityWaterMob) {
