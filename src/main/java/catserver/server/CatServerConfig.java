@@ -4,7 +4,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,12 +22,11 @@ public class CatServerConfig {
     public boolean enableSkipTileEntityTick = false;
     public boolean enableCapture = true;
     public long worldGenMaxTickTime = 15000000L;
-    public List<String> disableForgeGenWorld = new ArrayList<>();
-
-    public boolean disableUpdateGameProfile = true;
 
     public List<String> fakePlayerPermissions = Arrays.asList("essentials.build");
     public boolean fakePlayerEventPass = false;
+
+    public boolean disableUpdateGameProfile = true;
 
     public CatServerConfig(String file) {
         this.configFile = new File(file);
@@ -48,9 +46,11 @@ public class CatServerConfig {
         enableSkipTileEntityTick = getOrWriteBooleanConfig("world.enableSkipTileEntityTick", enableSkipTileEntityTick);
         enableCapture = getOrWriteBooleanConfig("world.enableCapture", enableCapture);
         worldGenMaxTickTime = getOrWriteIntConfig("world.worldGenMaxTick", 15) * 1000000;
+        // fakeplayer
+        fakePlayerPermissions = getOrWriteStringListConfig("fakePlayer.permissions", fakePlayerPermissions);
+        fakePlayerEventPass = getOrWriteBooleanConfig("fakePlayer.eventPass", fakePlayerEventPass);
         // general
         disableUpdateGameProfile = getOrWriteBooleanConfig("disableUpdateGameProfile", disableUpdateGameProfile);
-        fakePlayerEventPass = getOrWriteBooleanConfig("fakePlayer.eventPass", fakePlayerEventPass);
         // save config
         try {
             config.save(configFile);
