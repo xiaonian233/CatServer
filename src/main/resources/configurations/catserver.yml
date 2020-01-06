@@ -20,8 +20,6 @@ world:
   enableCapture: true
   # 世界生成限制, 减小可缓解跑图卡服
   worldGenMaxTick: 15
-# 禁用更新正版信息, 防止头颅卡服
-disableUpdateGameProfile: true
 # FakePlayer设置
 fakePlayer:
   # FakePlayer默认权限列表
@@ -29,3 +27,7 @@ fakePlayer:
     - essentials.build
   # FakePlayer跳过玩家事件, FakePlayer将不会触发事件, 会无视权限(非特殊情况请不要开启)
   eventPass: false
+# 禁用更新正版信息, 防止头颅卡服
+disableUpdateGameProfile: true
+# 禁用FML握手, 允许原版客户端连接(安装mod请勿开启)
+disableFMLHandshake: false
