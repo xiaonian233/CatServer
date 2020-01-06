@@ -13,7 +13,6 @@ public class CatServerConfig {
 
     public boolean hopperAsync = false;
     public boolean entityMoveAsync = true;
-    public boolean chunkGenAsync = false;
     public boolean modMobAsync = false;
     public int entityPoolNum = 3;
 
@@ -37,7 +36,6 @@ public class CatServerConfig {
         // async
         hopperAsync = getOrWriteBooleanConfig("async.hopper", hopperAsync);
         entityMoveAsync = getOrWriteBooleanConfig("async.entityMove", entityMoveAsync);
-        chunkGenAsync = getOrWriteBooleanConfig("async.chunkGen", chunkGenAsync);
         modMobAsync = getOrWriteBooleanConfig("async.modMob", modMobAsync);
         entityPoolNum = getOrWriteIntConfig("async.asyncPoolNum", entityPoolNum);
         // world
