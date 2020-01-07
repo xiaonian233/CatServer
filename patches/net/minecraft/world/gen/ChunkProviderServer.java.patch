@@ -117,21 +117,17 @@
              long i = ChunkPos.asLong(x, z);
  
              try
-@@ -126,7 +165,12 @@
+@@ -126,7 +165,8 @@
  
              this.id2ChunkMap.put(i, chunk);
              chunk.onLoad();
 -            chunk.populate(this, this.chunkGenerator);
-+            try {
-+                chunk.populateCB(this, this.chunkGenerator, true);
-+            }catch (Exception e) {
-+                FMLLog.log.error("Chunk gen error!");
-+            }
++            chunk.populateCB(this, this.chunkGenerator, true);
 +            world.timings.syncChunkLoadTimer.stopTiming(); // Spigot
          }
  
          return chunk;
-@@ -224,6 +268,11 @@
+@@ -224,6 +264,11 @@
          {
              if (!this.droppedChunksSet.isEmpty())
              {
@@ -143,7 +139,7 @@
                  Iterator<Long> iterator = this.droppedChunksSet.iterator();
  
                  for (int i = 0; i < 100 && iterator.hasNext(); iterator.remove())
-@@ -233,21 +282,58 @@
+@@ -233,21 +278,58 @@
  
                      if (chunk != null && chunk.unloadQueued)
                      {

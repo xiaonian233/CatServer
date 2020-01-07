@@ -216,13 +216,7 @@ public class LoadController
         stateEvent.applyModContainer(mc);
         ThreadContext.put("mod", modId);
         FMLLog.log.trace("Sending event {} to mod {}", stateEvent.getEventType(), modId);
-        // CatServer start
-        try {
-            eventChannels.get(modId).post(stateEvent);
-        } catch (Error e) {
-            throw new Error("MOD加载失败,请检查前置安装/MOD版本/是否为客户端MOD!" ,e);
-        }
-        // CatServer end
+        eventChannels.get(modId).post(stateEvent);
         FMLLog.log.trace("Sent event {} to mod {}", stateEvent.getEventType(), modId);
         ThreadContext.remove("mod");
         activeContainer = null;

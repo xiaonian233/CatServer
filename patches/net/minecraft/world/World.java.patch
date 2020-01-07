@@ -205,7 +205,7 @@
 +    }
 +
 +    public Chunk getChunkIfLoaded(int x, int z) {
-+        return ((ChunkProviderServer) this.chunkProvider).getChunkIfLoaded(x, z);
++        return this.chunkProvider instanceof ChunkProviderServer ? ((ChunkProviderServer) this.chunkProvider).getChunkIfLoaded(x, z) : this.chunkProvider.getLoadedChunk(x, z);
 +    }
 +
 +    protected World(ISaveHandler saveHandlerIn, WorldInfo info, WorldProvider providerIn, Profiler profilerIn, boolean client, ChunkGenerator gen, org.bukkit.World.Environment env) {
@@ -887,8 +887,8 @@
          this.profiler.startSection("entities");
          this.profiler.startSection("global");
  
-+        boolean checkSkipTick = CatServer.getConfig().enableSkipTick && MinecraftServer.currentTick % 50 == 0;
-+        boolean shouldSkipTick = CatServer.getConfig().enableSkipTick && MinecraftServer.currentTick % 5 > 0;
++        boolean checkSkipTick =  MinecraftServer.currentTick % 50 == 0;
++        boolean shouldSkipTick = MinecraftServer.currentTick % 5 > 0;
 +
 +        final int theWorldPlayerSize = playerEntities.size();
          for (int i = 0; i < this.weatherEffects.size(); ++i)
@@ -941,8 +941,9 @@
 +            if (theWorldPlayerSize < 1) continue; // CatServer - Don't update Entity For no body world
 +            tickPosition = (tickPosition < loadedEntityList.size()) ? tickPosition : 0;
 +            Entity entity2 = (Entity) this.loadedEntityList.get(this.tickPosition);
++            // CraftBukkit end
 +            // CatServer start
-+            if (this instanceof WorldServer) {
++            if (CatServer.getConfig().enableSkipEntityTick && this instanceof WorldServer) {
 +                if (checkSkipTick) {
 +                    WorldServer worldServer = (WorldServer) this;
 +                    ChunkPos chunkPos = new ChunkPos(entity2.getPosition());
@@ -951,7 +952,6 @@
 +                if (shouldSkipTick && entity2.skipTick) continue;
 +            }
 +            // CatServer end
-+            // CraftBukkit end
              Entity entity3 = entity2.getRidingEntity();
  
              if (entity3 != null)
@@ -1049,7 +1049,7 @@
 -
 -                if (this.isBlockLoaded(blockpos) && this.worldBorder.contains(blockpos))
 +                // CatServer start
-+                if (this instanceof WorldServer) {
++                if (CatServer.getConfig().enableSkipTileEntityTick && this instanceof WorldServer) {
 +                    if (checkSkipTick) {
 +                        WorldServer worldServer = (WorldServer) this;
 +                        ChunkPos chunkPos = new ChunkPos(blockpos);
