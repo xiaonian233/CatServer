@@ -21,6 +21,7 @@ public class CatServerConfig {
     public boolean enableSkipTileEntityTick = false;
     public boolean enableCapture = true;
     public long worldGenMaxTickTime = 15000000L;
+    public List<String> disableForgeGenerateWorlds = Arrays.asList("ExampleCustomWorld");
 
     public List<String> fakePlayerPermissions = Arrays.asList("essentials.build");
     public boolean fakePlayerEventPass = false;
@@ -45,6 +46,7 @@ public class CatServerConfig {
         enableSkipTileEntityTick = getOrWriteBooleanConfig("world.enableSkipTileEntityTick", enableSkipTileEntityTick);
         enableCapture = getOrWriteBooleanConfig("world.enableCapture", enableCapture);
         worldGenMaxTickTime = getOrWriteIntConfig("world.worldGenMaxTick", 15) * 1000000;
+        disableForgeGenerateWorlds = getOrWriteStringListConfig("world.disableForgeGenerateWorlds", disableForgeGenerateWorlds);
         // fakeplayer
         fakePlayerPermissions = getOrWriteStringListConfig("fakePlayer.permissions", fakePlayerPermissions);
         fakePlayerEventPass = getOrWriteBooleanConfig("fakePlayer.eventPass", fakePlayerEventPass);

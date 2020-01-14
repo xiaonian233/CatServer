@@ -20,11 +20,14 @@ world:
   enableCapture: true
   # 世界生成限制, 减小可缓解跑图卡服
   worldGenMaxTick: 15
+  # 禁用Forge生成器的世界列表
+  disableForgeGenerateWorlds:
+  - ExampleCustomWorld
 # FakePlayer设置
 fakePlayer:
   # FakePlayer默认权限列表
   permissions:
-    - essentials.build
+  - essentials.build
   # FakePlayer跳过玩家事件, FakePlayer将不会触发事件, 会无视权限(非特殊情况请不要开启)
   eventPass: false
 # 禁用更新正版信息, 防止头颅卡服
