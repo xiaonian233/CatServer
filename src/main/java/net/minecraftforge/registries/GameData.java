@@ -568,7 +568,6 @@ public class GameData
         }
     }
 
-
     private static <T extends IForgeRegistryEntry<T>> void loadRegistry(final ResourceLocation registryName, final RegistryManager from, final RegistryManager to, final Class<T> regType, boolean freeze)
     {
         ForgeRegistry<T> fromRegistry = from.getRegistry(registryName);

@@ -17,7 +17,6 @@ public class LanguageUtils {
         CN.put("launch.lib_downloading", "正在下载文件 %s 大小: %s");
         CN.put("async.caught_async", "拦截异步操作List, 请检查插件和MOD!");
         CN.put("world.chunk_update_error", "区块更新时发生错误, 已将区块卸载防止崩溃!");
-        CN.put("world.region_corrupt", "区块文件损坏: ");
 
         EN.put("launch.java_wrong", "Current Java version (%s) is not supported, please replace to Java8");
         EN.put("launch.lib_missing", "Missing libraries file, downloading..");
@@ -26,7 +25,6 @@ public class LanguageUtils {
         EN.put("launch.lib_downloading", "Downloading %s Size: %s");
         EN.put("async.caught_async", "Caught asynchronously modify List, please check plugins and mods!");
         EN.put("world.chunk_update_error", "An error occurred while chunk updating, unloaded chunk to prevent crash!");
-        EN.put("world.region_corrupt", "Region file is corrupted: ");
 
         current = ("zh".equals(Locale.getDefault().getLanguage()) ? CN : EN);
     }

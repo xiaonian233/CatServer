@@ -1,17 +1,11 @@
 --- ../src-base/minecraft/net/minecraft/world/GameRules.java
 +++ ../src-work/minecraft/net/minecraft/world/GameRules.java
-@@ -1,49 +1,49 @@
- package net.minecraft.world;
- 
-+import java.util.HashMap;
- import java.util.Set;
--import java.util.TreeMap;
- import net.minecraft.nbt.NBTTagCompound;
+@@ -6,44 +6,44 @@
  
  public class GameRules
  {
 -    private final TreeMap<String, GameRules.Value> rules = new TreeMap<String, GameRules.Value>();
-+    private final HashMap<String, Value> rules = new HashMap<>();
++    private final TreeMap<String, Value> rules = new TreeMap<String, Value>();
  
      public GameRules()
      {
