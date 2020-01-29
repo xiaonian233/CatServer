@@ -25,7 +25,7 @@
  import net.minecraft.inventory.ItemStackHelper;
  import net.minecraft.item.ItemStack;
  import net.minecraft.nbt.NBTTagCompound;
-@@ -28,12 +34,45 @@
+@@ -28,12 +34,46 @@
  import net.minecraft.util.math.MathHelper;
  import net.minecraft.world.World;
  
@@ -37,6 +37,7 @@
 +import org.bukkit.inventory.Inventory;
 +
 +import catserver.server.inventory.CatCustomInventory;
++import org.bukkit.inventory.InventoryHolder;
 +
  public class TileEntityHopper extends TileEntityLockableLoot implements IHopper, ITickable
  {
@@ -75,7 +76,7 @@
      public static void registerFixesHopper(DataFixer fixer)
      {
          fixer.registerWalker(FixTypes.BLOCK_ENTITY, new ItemStackDataLists(TileEntityHopper.class, new String[] {"Items"}));
-@@ -90,12 +129,16 @@
+@@ -90,12 +130,16 @@
  
      public void setInventorySlotContents(int index, ItemStack stack)
      {
@@ -97,7 +98,7 @@
          }
      }
  
-@@ -106,25 +149,34 @@
+@@ -106,25 +150,34 @@
  
      public int getInventoryStackLimit()
      {
@@ -142,7 +143,7 @@
      {
          if (this.world != null && !this.world.isRemote)
          {
-@@ -144,7 +196,7 @@
+@@ -144,7 +197,7 @@
  
                  if (flag)
                  {
@@ -151,7 +152,7 @@
                      this.markDirty();
                      return true;
                  }
-@@ -191,6 +243,7 @@
+@@ -191,6 +244,7 @@
  
      private boolean transferItemsOut()
      {
@@ -159,7 +160,7 @@
          IInventory iinventory = this.getInventoryForHopperTransfer();
  
          if (iinventory == null)
-@@ -297,6 +350,8 @@
+@@ -297,6 +351,8 @@
  
      public static boolean pullItems(IHopper hopper)
      {
@@ -168,7 +169,7 @@
          IInventory iinventory = getSourceInventory(hopper);
  
          if (iinventory != null)
-@@ -348,6 +403,7 @@
+@@ -348,6 +404,7 @@
          return false;
      }
  
@@ -176,7 +177,7 @@
      private static boolean pullItemFromSlot(IHopper hopper, IInventory inventoryIn, int index, EnumFacing direction)
      {
          ItemStack itemstack = inventoryIn.getStackInSlot(index);
-@@ -355,14 +411,47 @@
+@@ -355,14 +412,48 @@
          if (!itemstack.isEmpty() && canExtractItemFromSlot(inventoryIn, itemstack, index, direction))
          {
              ItemStack itemstack1 = itemstack.copy();
@@ -190,7 +191,8 @@
 +            if (inventoryIn instanceof InventoryLargeChest) {
 +                sourceInventory = new org.bukkit.craftbukkit.inventory.CraftInventoryDoubleChest((InventoryLargeChest) inventoryIn);
 +            } else {
-+                sourceInventory = inventoryIn.getOwner() != null ? inventoryIn.getOwner().getInventory() : new CatCustomInventory(inventoryIn).getInventory(); // CatServer
++                InventoryHolder owner = inventoryIn.getOwner();
++                sourceInventory = owner != null ? owner.getInventory() : new CatCustomInventory(inventoryIn).getInventory(); // CatServer
 +            }
 +
 +            InventoryMoveItemEvent event = new InventoryMoveItemEvent(sourceInventory, oitemstack.clone(), hopper.getOwner().getInventory(), false);
@@ -227,7 +229,7 @@
              inventoryIn.setInventorySlotContents(index, itemstack1);
          }
  
-@@ -379,6 +468,11 @@
+@@ -379,6 +470,11 @@
          }
          else
          {
@@ -239,7 +241,7 @@
              ItemStack itemstack = entity.getItem().copy();
              ItemStack itemstack1 = putStackInInventoryAllSlots(source, destination, itemstack, (EnumFacing)null);
  
-@@ -396,6 +490,12 @@
+@@ -396,6 +492,12 @@
          }
      }
  
@@ -252,7 +254,7 @@
      public static ItemStack putStackInInventoryAllSlots(IInventory source, IInventory destination, ItemStack stack, @Nullable EnumFacing direction)
      {
          if (destination instanceof ISidedInventory && direction != null)
-@@ -482,7 +582,7 @@
+@@ -482,7 +584,7 @@
                              }
                          }
  
@@ -261,7 +263,7 @@
                      }
                  }
  
-@@ -516,9 +616,11 @@
+@@ -516,9 +618,11 @@
          int j = MathHelper.floor(y);
          int k = MathHelper.floor(z);
          BlockPos blockpos = new BlockPos(i, j, k);
@@ -275,7 +277,7 @@
          {
              TileEntity tileentity = worldIn.getTileEntity(blockpos);
  
-@@ -586,7 +688,7 @@
+@@ -586,7 +690,7 @@
          this.transferCooldown = ticks;
      }
  
@@ -284,7 +286,7 @@
      {
          return this.transferCooldown > 0;
      }
-@@ -611,4 +713,6 @@
+@@ -611,4 +715,6 @@
      {
          return this.inventory;
      }
