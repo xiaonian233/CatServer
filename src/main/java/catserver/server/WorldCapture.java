@@ -1,20 +1,19 @@
 package catserver.server;
 
 import com.google.common.collect.Lists;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.World;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import java.util.List;
 
 public class WorldCapture {
-    private WorldServer world;
+    private World world;
     private boolean capture;
 
     private EntityPlayer curPlayer;
@@ -26,7 +25,7 @@ public class WorldCapture {
 
     private static Class<?>[] excludeEntities = new Class<?>[] {EntityPlayer.class, EntityEnderCrystal.class};
 
-    public WorldCapture(WorldServer world) {
+    public WorldCapture(World world) {
         this.world = world;
     }
 

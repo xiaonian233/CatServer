@@ -20,12 +20,3 @@
      public void writeChanges() throws IOException
      {
          Collection<V> collection = this.values.values();
-@@ -191,6 +195,8 @@
-             {
-                 bufferedreader = Files.newReader(this.saveFile, StandardCharsets.UTF_8);
-                 collection = (Collection)JsonUtils.fromJson(this.gson, bufferedreader, USER_LIST_ENTRY_TYPE);
-+            }catch (Exception e) {
-+                throw new RuntimeException("File is corrupted：" + this.saveFile.getCanonicalPath());
-             }
-             finally
-             {
