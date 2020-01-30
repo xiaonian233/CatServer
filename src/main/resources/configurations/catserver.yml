@@ -8,7 +8,7 @@ async:
   modMob: false
   # 线程池数量
   entityPoolNum: 3
-#世界配置
+# 世界选项
 world:
   # 预生成出生点区块和保持加载
   keepSpawnInMemory: false
@@ -23,14 +23,16 @@ world:
   # 禁用Forge生成器的世界列表
   disableForgeGenerateWorlds:
   - ExampleCustomWorld
-# FakePlayer设置
+# 虚拟玩家选项
 fakePlayer:
-  # FakePlayer默认权限列表
+  # 虚拟玩家默认权限列表
   permissions:
   - essentials.build
-  # FakePlayer跳过玩家事件, FakePlayer将不会触发事件, 会无视权限(非特殊情况请不要开启)
+  # 虚拟玩家跳过玩家事件, 虚拟玩家将不会触发事件, 会无视权限(非特殊情况请不要开启)
   eventPass: false
 # 禁用更新正版信息, 防止头颅卡服
 disableUpdateGameProfile: true
 # 禁用FML握手, 允许原版客户端连接(安装mod请勿开启)
 disableFMLHandshake: false
+# 禁用Ping获取MOD列表, 可缓解假人攻击
+disableFMLStatusModInfo: false
