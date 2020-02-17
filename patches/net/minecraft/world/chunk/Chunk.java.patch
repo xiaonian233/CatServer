@@ -148,15 +148,6 @@
                      {
                          this.heightMap[k << 4 | j] = l;
  
-@@ -206,7 +258,7 @@
-         {
-             for (int k = 0; k < 16; ++k)
-             {
--                this.precipitationHeightMap[j + (k << 4)] = -999;
-+                this.precipitationHeightMap[j + k << 4] = -999;
- 
-                 for (int l = i + 16; l > 0; --l)
-                 {
 @@ -452,12 +504,13 @@
  
      public int getBlockLightOpacity(BlockPos pos)
