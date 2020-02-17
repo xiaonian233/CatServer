@@ -31,7 +31,7 @@ fakePlayer:
   # 虚拟玩家跳过玩家事件, 虚拟玩家将不会触发事件, 会无视权限(非特殊情况请不要开启)
   eventPass: false
 # 禁用更新正版信息, 防止头颅卡服
-disableUpdateGameProfile: true
+disableUpdateGameProfile: false
 # 禁用FML握手, 允许原版客户端连接(安装mod请勿开启)
 disableFMLHandshake: false
 # 禁用Ping获取MOD列表, 可缓解假人攻击
