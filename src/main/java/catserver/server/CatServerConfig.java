@@ -26,7 +26,7 @@ public class CatServerConfig {
     public List<String> fakePlayerPermissions = Arrays.asList("essentials.build");
     public boolean fakePlayerEventPass = false;
 
-    public boolean disableUpdateGameProfile = true;
+    public boolean disableUpdateGameProfile = false;
     public boolean disableFMLHandshake = false;
     public boolean disableFMLStatusModInfo = false;
 
