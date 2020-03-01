@@ -23,6 +23,8 @@ world:
   # 禁用Forge生成器的世界列表
   disableForgeGenerateWorlds:
   - ExampleCustomWorld
+  # 防止获取方块造成区块加载 (正常情况请勿开启, 可能造成多方块结构失效和区块边缘方块异常)
+  preventBlockLoadChunk: false
 # 虚拟玩家选项
 fakePlayer:
   # 虚拟玩家默认权限列表
