@@ -65,7 +65,7 @@
  import net.minecraft.util.EntitySelectors;
  import net.minecraft.util.EnumFacing;
  import net.minecraft.util.EnumParticleTypes;
-@@ -43,34 +59,53 @@
+@@ -43,38 +59,57 @@
  import net.minecraft.util.ReportedException;
  import net.minecraft.util.SoundCategory;
  import net.minecraft.util.SoundEvent;
@@ -121,14 +121,22 @@
 -    protected final List<Entity> unloadedEntityList = Lists.<Entity>newArrayList();
 -    public final List<TileEntity> loadedTileEntityList = Lists.<TileEntity>newArrayList();
 -    public final List<TileEntity> tickableTileEntities = Lists.<TileEntity>newArrayList();
-+    public final List<Entity> loadedEntityList = new ThreadSafeArrayList<>(false); //CatServer - Async comp
-+    protected final List<Entity> unloadedEntityList = new ThreadSafeArrayList<>(false); // CatServer - Async comp
+-    private final List<TileEntity> addedTileEntityList = Lists.<TileEntity>newArrayList();
+-    private final List<TileEntity> tileEntitiesToBeRemoved = Lists.<TileEntity>newArrayList();
+-    public final List<EntityPlayer> playerEntities = Lists.<EntityPlayer>newArrayList();
+-    public final List<Entity> weatherEffects = Lists.<Entity>newArrayList();
++    public final List<Entity> loadedEntityList = new ThreadSafeArrayList<>(false); //CatServer - Async
++    protected final List<Entity> unloadedEntityList = new ThreadSafeArrayList<>(false); // CatServer - Async
 +    public final Set<Entity> unloadedEntitySet = new ConcurrentSet<>(); // CatServer - used to Async
-+    public final List<TileEntity> loadedTileEntityList = new ThreadSafeArrayList<>(true); // CatServer - Async comp
-+    public final List<TileEntity> tickableTileEntities = new ThreadSafeArrayList<>(true); // CatServer - Async comp
-     private final List<TileEntity> addedTileEntityList = Lists.<TileEntity>newArrayList();
-     private final List<TileEntity> tileEntitiesToBeRemoved = Lists.<TileEntity>newArrayList();
-     public final List<EntityPlayer> playerEntities = Lists.<EntityPlayer>newArrayList();
++    public final List<TileEntity> loadedTileEntityList = new ThreadSafeArrayList<>(true); // CatServer - Async
++    public final List<TileEntity> tickableTileEntities = new ThreadSafeArrayList<>(true); // CatServer - Async
++    private final List<TileEntity> addedTileEntityList = new ThreadSafeArrayList<>(true); // CatServer - Async
++    private final List<TileEntity> tileEntitiesToBeRemoved = new ThreadSafeArrayList<>(true); // CatServer - Async
++    public final List<EntityPlayer> playerEntities = new ThreadSafeArrayList<>(true); // CatServer - Async
++    public final List<Entity> weatherEffects = new ThreadSafeArrayList<>(false); // CatServer - Async
+     protected final IntHashMap<Entity> entitiesById = new IntHashMap<Entity>();
+     private final long cloudColour = 16777215L;
+     private int skylightSubtracted;
 @@ -86,30 +121,152 @@
      public float thunderingStrength;
      private int lastLightningBolt;
