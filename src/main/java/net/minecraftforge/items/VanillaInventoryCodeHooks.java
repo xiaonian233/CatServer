@@ -107,21 +107,29 @@ public class VanillaInventoryCodeHooks
             IItemHandler itemHandler = destinationResult.getKey();
             Object destination = destinationResult.getValue();
             // CatServer start
-            ItemStack originNMSStack = stack.copy().splitStack(1); // CatServer
+            ItemStack originNMSStack = stack.copy().splitStack(1);
+            ItemStack resultNMSStack = originNMSStack;
+
+            InventoryMoveItemEvent event = null;
+
             CraftItemStack oitemstack = CraftItemStack.asCraftMirror(originNMSStack);
 
             InventoryHolder owner = CatInventoryUtils.getOwner((TileEntity) destination);
             Inventory destinationInventory = owner != null ? owner.getInventory() : CatCustomInventory.getInventoryFromForge(itemHandler);
-            
-            InventoryMoveItemEvent event = new InventoryMoveItemEvent(CatInventoryUtils.getBukkitInventory(dropper), oitemstack, destinationInventory, true);
-            if (destinationInventory != null) world.getServer().getPluginManager().callEvent(event);
 
-            if (event.isCancelled()) {
-                return false;
+            if (destinationInventory != null) {
+                event = new InventoryMoveItemEvent(CatInventoryUtils.getBukkitInventory(dropper), oitemstack, destinationInventory, true);
+                world.getServer().getPluginManager().callEvent(event);
+
+                if (event.isCancelled()) {
+                    return false;
+                }
+
+                if (event.isCallSetItem) resultNMSStack = CraftItemStack.asNMSCopy(event.getRawItem());
             }
 
-            ItemStack remainder = putStackInInventoryAllSlots(dropper, destination, itemHandler, event.isCallSetItem ? CraftItemStack.asNMSCopy(event.getRawItem()) : originNMSStack);
-            if ((!event.isCallSetItem || event.getRawItem().equals(oitemstack)) && remainder.isEmpty())
+            ItemStack remainder = putStackInInventoryAllSlots(dropper, destination, itemHandler, resultNMSStack);
+            if ((event == null || !event.isCallSetItem || ItemStack.areItemStacksEqual(resultNMSStack, originNMSStack)) && remainder.isEmpty())
             {
                 remainder = stack.copy();
                 remainder.shrink(1);
@@ -157,45 +165,54 @@ public class VanillaInventoryCodeHooks
             }
             else
             {
+                boolean foundItem = false; // CatServer
                 for (int i = 0; i < hopper.getSizeInventory(); ++i)
                 {
                     if (!hopper.getStackInSlot(i).isEmpty())
                     {
+                        foundItem = true;
                         ItemStack originalSlotContents = hopper.getStackInSlot(i).copy();
-                        // CatServer start - Call event when pushing items into other inventories
+                        // CatServer start - Optimized of call event when pushing items into other inventories
                         ItemStack originNMSStack = hopper.decrStackSize(i, hopper.world.spigotConfig.hopperAmount); // CatServer
-                        CraftItemStack remainder = CraftItemStack.asCraftMirror(originNMSStack); // Spigot
+                        ItemStack resultNMSStack = originNMSStack;
 
-                        TileEntity te = (TileEntity) destination;
-                        InventoryHolder owner = CatInventoryUtils.getOwner(te);
-                        Inventory destinationInventory = owner != null ? owner.getInventory() : CatCustomInventory.getInventoryFromForge(itemHandler);
+                        InventoryMoveItemEvent event = null;
+                        if (!TileEntityHopper.skipHopperEvents) {
+                            CraftItemStack remainder = CraftItemStack.asCraftMirror(originNMSStack);
 
-                        InventoryMoveItemEvent event = new InventoryMoveItemEvent(CatInventoryUtils.getBukkitInventory(hopper), remainder, destinationInventory, true);
-                        if (destinationInventory != null) hopper.getWorld().getServer().getPluginManager().callEvent(event); //CatServer
+                            InventoryHolder owner = CatInventoryUtils.getOwner((TileEntity) destination);
+                            Inventory destinationInventory = owner != null ? owner.getInventory() : CatCustomInventory.getInventoryFromForge(itemHandler);
 
-                        if (event.isCancelled()) {
-                            hopper.setInventorySlotContents(i, originalSlotContents);
-                            hopper.setTransferCooldown(hopper.world.spigotConfig.hopperTransfer); // Spigot
-                            return true;
+                            if (destinationInventory != null) {
+                                event = new InventoryMoveItemEvent(CatInventoryUtils.getBukkitInventory(hopper), remainder, destinationInventory, true);
+                                hopper.getWorld().getServer().getPluginManager().callEvent(event); //CatServer
+
+                                if (event.isCancelled()) {
+                                    return true;
+                                }
+
+                                if (event.isCallSetItem) resultNMSStack = CraftItemStack.asNMSCopy(event.getRawItem());
+                            }
                         }
-                        int origCount = event.getRawItem().getAmount(); // Spigot
-                        ItemStack itemstack1 = putStackInInventoryAllSlots(hopper, destination, itemHandler, event.isCallSetItem ? CraftItemStack.asNMSCopy(event.getRawItem()) : originNMSStack);
+
+                        int origCount = resultNMSStack.getCount();
+                        ItemStack itemstack1 = putStackInInventoryAllSlots(hopper, destination, itemHandler, resultNMSStack);
 
                         if (itemstack1.isEmpty())
                         {
-                            if (!event.isCallSetItem || event.getRawItem().equals(remainder)) {
-                                te.markDirty();
+                            if (event == null || !event.isCallSetItem || ItemStack.areItemStacksEqual(resultNMSStack, originNMSStack)) {
+                                ((TileEntity) destination).markDirty();
                             } else {
                                 hopper.setInventorySlotContents(i, originalSlotContents);
                             }
-                            // CatServer end
                             return true;
                         }
-                        originalSlotContents.shrink(origCount - itemstack1.getCount()); // Spigot
+                        originalSlotContents.shrink(origCount - itemstack1.getCount());
+                        // CatServer end
                         hopper.setInventorySlotContents(i, originalSlotContents);
                     }
                 }
-
+                if (foundItem) hopper.setTransferCooldown(hopper.getWorld().spigotConfig.hopperTransfer); // CatServer - Inventory was full - cooldown
                 return false;
             }
         }
