@@ -55,10 +55,10 @@ public class FMLServerTweaker extends FMLTweaker {
         // and deobfuscated parts of the code. Without, the UI won't show anything
         classLoader.addClassLoaderExclusion("com.mojang.util.QueueLogAppender");
 
-        classLoader.addClassLoaderExclusion("jline.");
-        classLoader.addClassLoaderExclusion("org.fusesource.");
-        classLoader.addClassLoaderExclusion("net.minecraftforge.server.console.log4j.TerminalConsoleAppender");
-        classLoader.addClassLoaderExclusion("catserver.server.utils.log4j.Log4jUitls");
+        classLoader.addClassLoaderExclusion("org.jline.");
+        classLoader.addClassLoaderExclusion("com.sun.jna.");
+        classLoader.addClassLoaderExclusion("net.minecraftforge.server.terminalconsole.");
+        classLoader.addClassLoaderExclusion("catserver.server.log4j.");
 
         FMLLaunchHandler.configureForServerLaunch(classLoader, this);
         FMLLaunchHandler.appendCoreMods();

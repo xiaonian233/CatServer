@@ -53,38 +53,19 @@
          Thread thread = new Thread("Server Infinisleeper")
          {
              {
-@@ -95,14 +106,24 @@
+@@ -95,6 +106,11 @@
          {
              public void run()
              {
--                BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
 +                if (!org.bukkit.craftbukkit.Main.useConsole) {
 +                    return;
 +                }
-+                jline.console.ConsoleReader bufferedreader = reader;
-+//                if (net.minecraftforge.server.console.TerminalHandler.handleCommands(DedicatedServer.this)) return;
-+//                BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
++
++                if (net.minecraftforge.server.console.TerminalHandler.handleCommands(DedicatedServer.this)) return;
+                 BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
                  String s4;
  
--                try
--                {
--                    while (!DedicatedServer.this.isServerStopped() && DedicatedServer.this.isServerRunning() && (s4 = bufferedreader.readLine()) != null)
--                    {
--                        DedicatedServer.this.addPendingCommand(s4, DedicatedServer.this);
-+                try {
-+                    while (!isServerStopped() && isServerRunning()) {
-+                        if (org.bukkit.craftbukkit.Main.useJline) {
-+                            s4 = bufferedreader.readLine(">", null);
-+                        } else {
-+                            s4 = bufferedreader.readLine();
-+                        }
-+                        if (s4 != null && s4.trim().length() > 0) { // Trim to filter lines which are just spaces
-+                            addPendingCommand(s4, DedicatedServer.this);
-+                        }
-                     }
-                 }
-                 catch (IOException ioexception1)
-@@ -111,6 +132,28 @@
+@@ -111,6 +127,35 @@
                  }
              }
          };
@@ -97,6 +78,9 @@
 +        }
 +        global.addHandler(new org.bukkit.craftbukkit.util.ForwardLogHandler());
 +
++        // Paper start - Not needed with TerminalConsoleAppender
++        final org.apache.logging.log4j.Logger logger = LogManager.getRootLogger();
++        /*
 +        final org.apache.logging.log4j.core.Logger logger = ((org.apache.logging.log4j.core.Logger) LogManager.getRootLogger());
 +        for (org.apache.logging.log4j.core.Appender appender : logger.getAppenders().values()) {
 +            if (appender instanceof org.apache.logging.log4j.core.appender.ConsoleAppender) {
@@ -105,6 +89,10 @@
 +        }
 +
 +        new Thread(new org.bukkit.craftbukkit.util.TerminalConsoleWriterThread(System.out, this.reader)).start();
++        */
++        // Paper end
++
++        catserver.server.threads.ConsoleWriteThread.startThread(); // CatServer
 +
 +        System.setOut(new PrintStream(new LoggerOutputStream(logger, Level.INFO), true));
 +        System.setErr(new PrintStream(new LoggerOutputStream(logger, Level.WARN), true));
@@ -113,7 +101,7 @@
          thread.setDaemon(true);
          thread.start();
          LOGGER.info("Starting minecraft server version 1.12.2");
-@@ -120,8 +163,10 @@
+@@ -120,8 +165,10 @@
              LOGGER.warn("To start the server with more ram, launch it as \"java -Xmx1024M -Xms1024M -jar minecraft_server.jar\"");
          }
  
@@ -125,7 +113,7 @@
          this.eula = new ServerEula(new File("eula.txt"));
  
          if (!this.eula.hasAcceptedEULA())
-@@ -177,27 +222,42 @@
+@@ -177,27 +224,42 @@
                  this.setServerPort(this.settings.getIntProperty("server-port", 25565));
              }
  
@@ -180,7 +168,7 @@
                  LOGGER.warn("To change this, set \"online-mode\" to \"true\" in the server.properties file.");
              }
  
-@@ -212,7 +272,9 @@
+@@ -212,7 +274,9 @@
              }
              else
              {
@@ -191,7 +179,7 @@
                  long j = System.nanoTime();
  
                  if (this.getFolderName() == null)
-@@ -260,6 +322,7 @@
+@@ -260,6 +324,7 @@
                  TileEntitySkull.setProfileCache(this.getPlayerProfileCache());
                  TileEntitySkull.setSessionService(this.getMinecraftSessionService());
                  PlayerProfileCache.setOnlineMode(this.isServerInOnlineMode());
@@ -199,7 +187,7 @@
                  LOGGER.info("Preparing level \"{}\"", (Object)this.getFolderName());
                  this.loadAllWorlds(this.getFolderName(), this.getFolderName(), k, worldtype, s2);
                  long i1 = System.nanoTime() - j;
-@@ -268,7 +331,7 @@
+@@ -268,7 +333,7 @@
  
                  if (this.settings.hasProperty("announce-player-achievements"))
                  {
@@ -208,7 +196,7 @@
                      this.settings.removeProperty("announce-player-achievements");
                      this.settings.saveProperties();
                  }
-@@ -280,14 +343,33 @@
+@@ -280,14 +345,33 @@
                      this.rconQueryThread.startThread();
                  }
  
@@ -245,7 +233,7 @@
                  {
                      Thread thread1 = new Thread(new ServerHangWatchdog(this));
                      thread1.setName("Server Watchdog");
-@@ -296,7 +378,8 @@
+@@ -296,7 +380,8 @@
                  }
  
                  Items.AIR.getSubItems(CreativeTabs.SEARCH, NonNullList.create());
@@ -255,7 +243,7 @@
              }
          }
      }
-@@ -419,11 +502,20 @@
+@@ -419,11 +504,20 @@
  
      public void executePendingCommands()
      {
@@ -280,7 +268,7 @@
      }
  
      public boolean isDedicatedServer()
-@@ -515,7 +607,7 @@
+@@ -515,7 +609,7 @@
  
      public boolean isBlockProtected(World worldIn, BlockPos pos, EntityPlayer playerIn)
      {
@@ -289,7 +277,7 @@
          {
              return false;
          }
-@@ -584,6 +676,9 @@
+@@ -584,6 +678,9 @@
          return this.settings.getIntProperty("network-compression-threshold", super.getNetworkCompressionThreshold());
      }
  
@@ -299,7 +287,7 @@
      protected boolean convertFiles() throws IOException
      {
          boolean flag = false;
-@@ -673,13 +768,66 @@
+@@ -673,13 +770,66 @@
  
      public String getPlugins()
      {
